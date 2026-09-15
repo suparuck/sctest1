@@ -12,9 +12,9 @@ async function main() {
   }
 
   const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false, // upgrades to TLS via STARTTLS
+    host: process.env.SMTP_HOST || 'smtp.gmail.com',
+    port: Number(process.env.SMTP_PORT) || 587,
+    secure: process.env.SMTP_SECURE === 'true', // upgrades to TLS via STARTTLS when false on port 587
     auth: {
       user: GMAIL_USER,
       pass: GMAIL_APP_PASSWORD,
@@ -24,9 +24,9 @@ async function main() {
   const info = await transporter.sendMail({
     from: GMAIL_USER,
     to: MAIL_TO,
-    subject: 'Hello from the Gmail SMTP sample app',
-    text: 'This is a plain-text test email sent via Google SMTP and Nodemailer.',
-    html: '<p>This is a <b>test email</b> sent via Google SMTP and Nodemailer.</p>',
+    subject: 'Hello from the SMTP sample app',
+    text: 'This is a plain-text test email sent via SMTP and Nodemailer.',
+    html: '<p>This is a <b>test email</b> sent via SMTP and Nodemailer.</p>',
   });
 
   console.log('Message sent:', info.messageId);

@@ -19,20 +19,24 @@ function escapeHtml(str) {
     .replace(/'/g, '&#39;');
 }
 
+const SMTP_HOST = process.env.SMTP_HOST || 'smtp.gmail.com';
+const SMTP_PORT = Number(process.env.SMTP_PORT) || 587;
+const SMTP_SECURE = process.env.SMTP_SECURE === 'true';
+
 function getTransporter(gmailUser, gmailPassword) {
   const user = gmailUser || process.env.GMAIL_USER;
   const pass = gmailPassword || process.env.GMAIL_APP_PASSWORD;
   if (!user || !pass) {
     throw new Error(
-      'Gmail address and App Password are required, either in the form or via GMAIL_USER/GMAIL_APP_PASSWORD in .env.'
+      'Sender address and password are required, either in the form or via GMAIL_USER/GMAIL_APP_PASSWORD in .env.'
     );
   }
   return {
     user,
     transporter: nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 587,
-      secure: false,
+      host: SMTP_HOST,
+      port: SMTP_PORT,
+      secure: SMTP_SECURE,
       auth: { user, pass },
     }),
   };

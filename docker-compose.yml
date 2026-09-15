@@ -5,3 +5,12 @@ services:
       - .env
     ports:
       - "3000:3000"
+
+  # Local SMTP test server (Mailpit). Catches every email sent to it instead
+  # of delivering it, so you can test the app without a real Gmail account.
+  # View caught mail at http://localhost:8025
+  smtp:
+    image: axllent/mailpit:latest
+    ports:
+      - "8025:8025" # web UI
+      - "1025:1025" # SMTP
