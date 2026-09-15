@@ -1,0 +1,14 @@
+{
+  "name": "gmail-smtp-sample",
+  "version": "1.0.0",
+  "description": "Sample app that sends an email using Google (Gmail) SMTP",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "nodemailer": "^6.9.14"
+  }
+}
