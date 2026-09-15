@@ -7,7 +7,10 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+# Strip Windows CRLF line endings in case Git checked this out with them
+# (e.g. core.autocrlf=true on Windows) — a CRLF shebang line makes the
+# container fail with "exec /entrypoint.sh: no such file or directory".
+RUN sed -i 's/\r$//' /entrypoint.sh && chmod +x /entrypoint.sh
 
 EXPOSE 25
 
