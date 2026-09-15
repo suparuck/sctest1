@@ -44,11 +44,32 @@ Sends a single hardcoded test email to `MAIL_TO` and prints the sent message's I
 
 ## Docker
 
+Build locally:
+
 ```bash
 docker compose up --build
 ```
 
 Exposes the web app on http://localhost:3000 (reads credentials from `.env`).
+
+### Pull the prebuilt image instead of building
+
+Every push to `claude/youthful-curie-5cjays` builds and publishes an image to
+GitHub Container Registry via `.github/workflows/docker-image.yml`. Once a
+build has run, pull and run it directly instead of building from source:
+
+```bash
+docker pull ghcr.io/suparuck/sctest1:latest
+docker run --rm -p 3000:3000 --env-file .env ghcr.io/suparuck/sctest1:latest
+```
+
+The GHCR package is private by default (same visibility as the repo). If
+`docker pull` fails with a permission error, either make the package public
+under the repo's Packages settings on GitHub, or authenticate first:
+
+```bash
+echo <a GitHub PAT with read:packages> | docker login ghcr.io -u <your-github-username> --password-stdin
+```
 
 ## Notes
 
