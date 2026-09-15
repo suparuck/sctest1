@@ -31,4 +31,19 @@ postconf -e "maillog_file = /dev/stdout"
 # that failure entirely for this internal-only use case.
 postconf -e "smtpd_tls_security_level = none"
 
+# Debian's postfix package runs the smtp (outbound delivery) service
+# chrooted under /var/spool/postfix by default. That jail doesn't include
+# /etc/resolv.conf, so Postfix's own DNS client can't see the nameserver
+# config and every MX/A lookup fails with "Host not found, try again" —
+# even though the same lookup works fine for any other process in the
+# container (confirmed: `dig MX gmail.com` succeeds, Postfix's own lookup
+# of the same record does not). Disabling chroot for smtp fixes this.
+postconf -P smtp/unix/chroot=n
+
+# Belt-and-suspenders: also mirror resolv.conf into the chroot directory,
+# in case any other chrooted service still needs it or the chroot=n
+# override above doesn't fully apply on some Postfix versions.
+mkdir -p /var/spool/postfix/etc
+cp -f /etc/resolv.conf /var/spool/postfix/etc/resolv.conf
+
 exec postfix start-fg
