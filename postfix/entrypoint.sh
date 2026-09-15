@@ -14,4 +14,8 @@ postconf -e "inet_protocols = ipv4"
 postconf -e "mynetworks = ${MYNETWORKS:-172.16.0.0/12 192.168.0.0/16 10.0.0.0/8}"
 postconf -e "smtpd_relay_restrictions = permit_mynetworks, reject_unauth_destination"
 
+# Log to stdout instead of syslog, so `docker compose logs postfix` actually
+# shows delivery attempts, deferrals, and bounces.
+postconf -e "maillog_file = /dev/stdout"
+
 exec postfix start-fg
