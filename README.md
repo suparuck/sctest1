@@ -1,6 +1,6 @@
 # Gmail SMTP Sample App
 
-A minimal Node.js sample that sends an email using Google's SMTP server via [Nodemailer](https://nodemailer.com/).
+A minimal Node.js sample that sends email using Google's SMTP server via [Nodemailer](https://nodemailer.com/). Includes a small web form to compose and send an email, plus a one-shot CLI script.
 
 ## Setup
 
@@ -20,19 +20,35 @@ A minimal Node.js sample that sends an email using Google's SMTP server via [Nod
    cp .env.example .env
    ```
 
-   | Variable            | Description                                  |
-   | ------------------- | --------------------------------------------- |
-   | `GMAIL_USER`        | The Gmail address sending the email           |
-   | `GMAIL_APP_PASSWORD`| The 16-character App Password (no spaces)     |
-   | `MAIL_TO`           | The recipient's email address                 |
+   | Variable             | Description                                             |
+   | --------------------- | -------------------------------------------------------- |
+   | `GMAIL_USER`          | The Gmail address sending the email                      |
+   | `GMAIL_APP_PASSWORD`  | The 16-character App Password (no spaces)                |
+   | `MAIL_TO`             | Recipient used only by the CLI script (`npm run send`)   |
 
-## Run
+## Run the web app
 
 ```bash
 npm start
 ```
 
-On success you'll see the sent message's ID printed to the console.
+Open http://localhost:3000, fill in the recipient, subject, and message, and click Send. The form posts to `POST /send`, which sends the email via Gmail SMTP and reports success/failure back in the page.
+
+## Run the CLI script
+
+```bash
+npm run send
+```
+
+Sends a single hardcoded test email to `MAIL_TO` and prints the sent message's ID to the console.
+
+## Docker
+
+```bash
+docker compose up --build
+```
+
+Exposes the web app on http://localhost:3000 (reads credentials from `.env`).
 
 ## Notes
 
