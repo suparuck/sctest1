@@ -19,37 +19,40 @@ function escapeHtml(str) {
     .replace(/'/g, '&#39;');
 }
 
-function getTransporter() {
-  const { GMAIL_USER, GMAIL_APP_PASSWORD } = process.env;
-  if (!GMAIL_USER || !GMAIL_APP_PASSWORD) {
+function getTransporter(gmailUser, gmailPassword) {
+  const user = gmailUser || process.env.GMAIL_USER;
+  const pass = gmailPassword || process.env.GMAIL_APP_PASSWORD;
+  if (!user || !pass) {
     throw new Error(
-      'Missing GMAIL_USER or GMAIL_APP_PASSWORD environment variables. Copy .env.example to .env and fill them in.'
+      'Gmail address and App Password are required, either in the form or via GMAIL_USER/GMAIL_APP_PASSWORD in .env.'
     );
   }
-  return nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false,
-    auth: {
-      user: GMAIL_USER,
-      pass: GMAIL_APP_PASSWORD,
-    },
-  });
+  return {
+    user,
+    transporter: nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false,
+      auth: { user, pass },
+    }),
+  };
 }
 
 app.post('/send', async (req, res) => {
   const to = (req.body.to || '').trim();
   const subject = (req.body.subject || '').trim();
   const message = (req.body.message || '').trim();
+  const gmailUser = (req.body.gmailUser || '').trim();
+  const gmailPassword = req.body.gmailPassword || '';
 
   if (!to || !subject || !message) {
     return res.status(400).json({ error: 'to, subject, and message are all required.' });
   }
 
   try {
-    const transporter = getTransporter();
+    const { user, transporter } = getTransporter(gmailUser, gmailPassword);
     const info = await transporter.sendMail({
-      from: process.env.GMAIL_USER,
+      from: user,
       to,
       subject,
       text: message,
