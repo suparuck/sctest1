@@ -25,3 +25,9 @@ services:
   # something this project controls.
   postfix:
     build: ./postfix
+    # Explicit public DNS servers. Docker Desktop's default DNS forwarding
+    # can fail to resolve real-world domains when the host is on a VPN or
+    # has an unusual network setup — this avoids depending on that.
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
