@@ -7,7 +7,12 @@ postconf -e "myhostname = ${MYHOSTNAME:-mail.localdomain}"
 postconf -e "mydestination ="
 postconf -e "relayhost ="
 postconf -e "inet_interfaces = all"
-postconf -e "inet_protocols = ipv4"
+# "all" (not "ipv4") so this works whether the host's network gives the
+# container working IPv4 connectivity, IPv6, or both — some VPNs leave only
+# one of the two actually functional, and hardcoding ipv4 caused MX lookups
+# to fail with "Host not found, try again" even for domains that resolve
+# fine (e.g. gmail.com) when only IPv6 routing was actually working.
+postconf -e "inet_protocols = all"
 
 # Only accept mail from inside the Docker network — never expose this
 # container's port 25 to the host/internet, or it becomes an open relay.
