@@ -14,3 +14,14 @@ services:
     ports:
       - "8025:8025" # web UI
       - "1025:1025" # SMTP
+
+  # Real, open-source, send-only outbound relay (Postfix). Delivers directly
+  # to each recipient's mail server instead of just catching mail locally.
+  # No port is published to the host on purpose — only other containers on
+  # this compose network can reach it, so it can't be used as an open relay
+  # from outside your machine. Whether mail actually lands in the recipient's
+  # inbox (vs. rejected/spam) depends on your network's IP reputation and DNS
+  # (SPF/DKIM/PTR) — that's true of any self-hosted mail server, not
+  # something this project controls.
+  postfix:
+    build: ./postfix

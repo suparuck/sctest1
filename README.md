@@ -80,6 +80,35 @@ Then run `docker compose up --build`, send an email through the form at
 http://localhost:3000, and view it at **http://localhost:8025** — Mailpit's
 web UI shows every message it caught.
 
+### Send without a real Gmail account (self-hosted Postfix relay)
+
+`docker-compose.yml` also includes a `postfix` service — a real,
+open-source, send-only outbound mail relay (not a catcher like Mailpit).
+Unlike Mailpit, it actually attempts delivery to the recipient's real mail
+server.
+
+**Important:** whether mail delivered this way actually lands in the
+recipient's inbox (versus being rejected or sent to spam) depends on your
+network's outbound IP reputation and DNS records (SPF, DKIM, a matching PTR
+/ reverse-DNS record) — none of which this project sets up, and most
+home/office networks don't have. Major providers (Gmail, Outlook, Yahoo)
+are especially strict about this. Treat this as a way to run and understand
+a real mail relay, not a guaranteed delivery path. Its SMTP port is
+intentionally not published to your host machine or the internet, so it
+can't be abused as an open relay.
+
+To use it, set in `.env`:
+
+```
+GMAIL_USER=sender@yourdomain.example
+GMAIL_APP_PASSWORD=unused
+SMTP_HOST=postfix
+SMTP_PORT=25
+SMTP_SECURE=false
+```
+
+Then `docker compose up --build` and send through the form as usual.
+
 ### Pull the prebuilt image instead of building
 
 Every push to `claude/youthful-curie-5cjays` builds and publishes an image to
