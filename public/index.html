@@ -110,6 +110,10 @@
       <label for="gmailPassword">App password</label>
       <input type="password" id="gmailPassword" name="gmailPassword" placeholder="16-character App Password" autocomplete="off">
       <p class="hint">Leave blank to use GMAIL_USER / GMAIL_APP_PASSWORD from .env instead.</p>
+
+      <label for="fromAddress">From address (optional)</label>
+      <input type="email" id="fromAddress" name="fromAddress" placeholder="Leave blank to use the Gmail address above" autocomplete="off">
+      <p class="hint">Shown to the recipient as the sender. Gmail only allows this to be the authenticated account or a verified "Send As" alias — other providers may allow any address.</p>
     </fieldset>
 
     <label for="to">To</label>
@@ -144,6 +148,7 @@
       message: document.getElementById('message').value,
       gmailUser: document.getElementById('gmailUser').value,
       gmailPassword: document.getElementById('gmailPassword').value,
+      fromAddress: document.getElementById('fromAddress').value,
     };
 
     try {

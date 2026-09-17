@@ -48,6 +48,7 @@ app.post('/send', async (req, res) => {
   const message = (req.body.message || '').trim();
   const gmailUser = (req.body.gmailUser || '').trim();
   const gmailPassword = req.body.gmailPassword || '';
+  const fromAddress = (req.body.fromAddress || '').trim();
 
   if (!to || !subject || !message) {
     return res.status(400).json({ error: 'to, subject, and message are all required.' });
@@ -56,7 +57,7 @@ app.post('/send', async (req, res) => {
   try {
     const { user, transporter } = getTransporter(gmailUser, gmailPassword);
     const info = await transporter.sendMail({
-      from: user,
+      from: fromAddress || user,
       to,
       subject,
       text: message,
