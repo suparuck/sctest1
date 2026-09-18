@@ -1,5 +1,7 @@
 # Gmail SMTP Sample App
 
+[![Docker Image CI](https://github.com/suparuck/sctest1/actions/workflows/docker-image.yml/badge.svg)](https://github.com/suparuck/sctest1/actions/workflows/docker-image.yml)
+
 A minimal Node.js sample that sends email using Google's SMTP server via [Nodemailer](https://nodemailer.com/). Includes a small web form to compose and send an email, plus a one-shot CLI script.
 
 | Empty form | Filled out and ready to send |
