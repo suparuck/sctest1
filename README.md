@@ -2,6 +2,8 @@
 
 A minimal Node.js sample that sends email using Google's SMTP server via [Nodemailer](https://nodemailer.com/). Includes a small web form to compose and send an email, plus a one-shot CLI script.
 
+![Send an email form](docs/screenshot.png)
+
 ## Setup
 
 1. Install dependencies:
